@@ -28,6 +28,7 @@ public class CalculatorTest {
         int x = calculator.multiply(1, 2);
         Assert.assertEquals(2, x);
 
+        //Using rule
         Logger logger = myLoggerRule.getLogger();
         logger.warning("WARRRRRRRRRRRNING");
     }
