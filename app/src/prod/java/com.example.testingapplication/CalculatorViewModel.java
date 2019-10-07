@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-
 public class CalculatorViewModel extends ViewModel {
 
     private MutableLiveData<Integer> result = new MutableLiveData<>();
@@ -20,5 +19,4 @@ public class CalculatorViewModel extends ViewModel {
         if (!TextUtils.isEmpty(x) && !TextUtils.isEmpty(y))
             result.setValue(calculator.multiply(Integer.valueOf(x), Integer.valueOf(y)));
     }
-
 }

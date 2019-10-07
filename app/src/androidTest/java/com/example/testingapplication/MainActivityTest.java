@@ -47,6 +47,9 @@ public class MainActivityTest {
 
     }
 
+    /**
+     * Test using espresso
+     */
     @Test
     public void onMultiplyClicked_TextViewChangeCorrectly() {
 
@@ -63,7 +66,9 @@ public class MainActivityTest {
     }
 
     /**
-     * I need to test how to replace activity view model with my fake view model
+     * Test using Mockito
+     * <p>
+     * I need to test how to replace activity view model with my fake view model using mockito
      */
     @Test
     public void onMultiplyClicked_TextViewChange() {
@@ -80,6 +85,21 @@ public class MainActivityTest {
 
         onView(withId(R.id.textView)).check(ViewAssertions.matches(withText("6")));
 
+    }
+
+
+    /**
+     * Test using flavor
+     * <p>
+     * by this way we can observe our live data in onCreate()
+     * after run change build variant to mock
+     */
+    @Test
+    public void onMultiplyClicked_TextViewChangeUsingFlavor() {
+
+        onView(withId(R.id.button)).perform(closeSoftKeyboard(), click());
+
+        onView(withId(R.id.textView)).check(ViewAssertions.matches(withText("6")));
 
     }
 }
