@@ -17,24 +17,13 @@ import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
+import org.mockito.Mockito;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-
-class MockViewModel extends CalculatorViewModel {
-    private MutableLiveData<Integer> result = new MutableLiveData<>();
-
-    MutableLiveData<Integer> getResult() {
-        return result;
-    }
-
-    void multiply(String x, String y) {
-        result.setValue(6);
-    }
-}
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -47,21 +36,20 @@ public class ExampleInstrumentedTest {
      * A test rule, which encapsulate the {@link ActivityTestRule}, and "delegates" the
      * {@link TestRule#apply(Statement, Description)} to it. And set the
      * {@link com.example.testingapplication.servicelocator.ServiceLocator} to get a
-     * {@link MockViewModel} instead of the real object.
+     * {@link Multiplier} instead of the real object.
      */
     @Rule
     public TestRule activityTestRule = new TestRule() {
         @Override
         public Statement apply(Statement base, Description description) {
             ActivityTestRule<MainActivity> delegate = new ActivityTestRule<>(MainActivity.class, true, true);
-            calculatorViewModel = new MockViewModel();
-            ServiceLocatorSetter.mockTheServiceLocator(calculatorViewModel);
+            ServiceLocatorSetter.mockTheServiceLocator(multiplier);
             return delegate.apply(base, description);
         }
 
     };
 
-    private CalculatorViewModel calculatorViewModel;
+    private Multiplier multiplier = Mockito.mock(Multiplier.class);
 
     private MutableLiveData<Integer> data = new MutableLiveData<>();
 
@@ -73,9 +61,9 @@ public class ExampleInstrumentedTest {
     @Test
     public void onMultiplyClicked_TextViewChange() {
 
-        onView(withId(R.id.button)).perform(closeSoftKeyboard(), click());
+        Mockito.when(multiplier.multiply("", "", null)).thenReturn(6);
 
-        calculatorViewModel.getResult().postValue(6);
+        onView(withId(R.id.button)).perform(closeSoftKeyboard(), click());
 
         onView(withId(R.id.textView)).check(ViewAssertions.matches(withText("6")));
 
@@ -89,6 +77,7 @@ public class ExampleInstrumentedTest {
      */
     @Test
     public void onMultiplyClicked_TextViewChangeUsingTheSingleton() {
+        Mockito.when(multiplier.multiply("", "", null)).thenReturn(6);
 
         onView(withId(R.id.button)).perform(closeSoftKeyboard(), click());
 

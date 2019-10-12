@@ -1,22 +1,37 @@
 package com.example.testingapplication.servicelocator;
 
+import android.text.TextUtils;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.testingapplication.Calculator;
 import com.example.testingapplication.CalculatorViewModel;
+import com.example.testingapplication.Multiplier;
 
 // Converted it from a class to an interface
 public interface ServiceLocator {
 
-    CalculatorViewModel getCalculatorViewModel(FragmentActivity activity);
+    Multiplier getMultiplier();
 
     /**
      * The default implementation for the interface {@link ServiceLocator}.
      */
     class DefaultServiceLocatorImpl implements ServiceLocator {
         @Override
-        public CalculatorViewModel getCalculatorViewModel(FragmentActivity activity) {
-            return ViewModelProviders.of(activity).get(CalculatorViewModel.class);
+        public Multiplier getMultiplier() {
+            return new Multiplier() {
+                // This should have contained the logic instead of creating a new repository
+                private Calculator calculator = new Calculator();
+                @Override
+                public Integer multiply(String x, String y, Integer previousValue) {
+                    if (!TextUtils.isEmpty(x) && !TextUtils.isEmpty(y)) {
+                        return calculator.multiply(Integer.valueOf(x), Integer.valueOf(y));
+                    } else {
+                        return previousValue;
+                    }
+                }
+            };
         }
     }
 

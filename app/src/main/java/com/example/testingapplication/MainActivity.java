@@ -30,9 +30,7 @@ public class MainActivity extends AppCompatActivity {
         editText1 = findViewById(R.id.editText1);
         editText2 = findViewById(R.id.editText2);
 
-        calculatorViewModel = ServiceLocator.ServiceLocatorProvider
-                .getInstance()
-                .getCalculatorViewModel(this);
+        calculatorViewModel = ViewModelProviders.of(this).get(CalculatorViewModel.class);
 
         calculatorViewModel.getResult().observe(this, new Observer<Integer>() {
             @Override
