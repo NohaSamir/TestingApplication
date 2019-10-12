@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.example.testingapplication.servicelocator.ServiceLocator;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView resultTextView;
@@ -28,17 +30,16 @@ public class MainActivity extends AppCompatActivity {
         editText1 = findViewById(R.id.editText1);
         editText2 = findViewById(R.id.editText2);
 
-        calculatorViewModel = ViewModelProviders.of(this).get(CalculatorViewModel.class);
+        calculatorViewModel = ServiceLocator.ServiceLocatorProvider
+                .getInstance()
+                .getCalculatorViewModel(this);
 
-        //Test fail in case i observe my result in on create, because it called before setViewModel()
-        /*
         calculatorViewModel.getResult().observe(this, new Observer<Integer>() {
             @Override
             public void onChanged(Integer integer) {
                 resultTextView.setText(String.valueOf(integer));
             }
         });
-        */
     }
 
 
@@ -49,25 +50,6 @@ public class MainActivity extends AppCompatActivity {
 
         calculatorViewModel.multiply(x, y);
 
-        calculatorViewModel.getResult().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                resultTextView.setText(String.valueOf(integer));
-            }
-        });
     }
 
-
-    @VisibleForTesting
-    public void setViewModel(CalculatorViewModel viewModel) {
-        calculatorViewModel = viewModel;
-
-        //Test fail in case I observe my result in setViewModel(), because it Cannot invoke observe on a background thread
-        /*calculatorViewModel.getResult().observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                resultTextView.setText(String.valueOf(integer));
-            }
-        });*/
-    }
 }
