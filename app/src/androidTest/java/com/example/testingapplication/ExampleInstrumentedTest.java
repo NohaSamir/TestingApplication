@@ -9,8 +9,10 @@ import androidx.test.espresso.assertion.ViewAssertions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
 
+import com.android.dx.command.Main;
 import com.example.testingapplication.servicelocator.ServiceLocatorSetter;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestRule;
@@ -18,6 +20,9 @@ import org.junit.runner.Description;
 import org.junit.runner.RunWith;
 import org.junit.runners.model.Statement;
 import org.mockito.Mockito;
+
+import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
@@ -39,15 +44,23 @@ public class ExampleInstrumentedTest {
      * {@link Multiplier} instead of the real object.
      */
     @Rule
-    public TestRule activityTestRule = new TestRule() {
+    public ActivityTestRule<MainActivity> delegate =
+            new ActivityTestRule<MainActivity>(MainActivity.class, true, true) {
         @Override
-        public Statement apply(Statement base, Description description) {
-            ActivityTestRule<MainActivity> delegate = new ActivityTestRule<>(MainActivity.class, true, true);
+        public Statement apply(final Statement base, final Description description) {
+            multiplier = Mockito.mock(Multiplier.class);
+            final ActivityTestRule<MainActivity> delegate =
+                    new ActivityTestRule<>(MainActivity.class, true, true);
             ServiceLocatorSetter.mockTheServiceLocator(multiplier);
             return delegate.apply(base, description);
         }
 
     };
+
+    @After
+    public void reset(){
+        ServiceLocatorSetter.reset();
+    }
 
     private Multiplier multiplier = Mockito.mock(Multiplier.class);
 
