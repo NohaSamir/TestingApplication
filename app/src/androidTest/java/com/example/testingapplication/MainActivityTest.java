@@ -22,7 +22,6 @@ import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
@@ -37,7 +36,6 @@ public class MainActivityTest {
      */
 
     private MutableLiveData<Integer> data = new MutableLiveData<>();
-
 
     @Before
     public void init() {
@@ -73,7 +71,7 @@ public class MainActivityTest {
     @Test
     public void onMultiplyClicked_TextViewChange() {
 
-        activityTestRule.getActivity().setViewModel(calculatorViewModel);
+//        activityTestRule.getActivity().setViewModel(calculatorViewModel);
 
         doNothing().when(calculatorViewModel).multiply(Mockito.anyString(), Mockito.anyString());
 
